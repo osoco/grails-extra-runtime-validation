@@ -5,7 +5,7 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
-        // uncomment to disable ehcache
+        // uncomment to disable eh  cache
         // excludes 'ehcache'
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
@@ -13,6 +13,7 @@ grails.project.dependency.resolution = {
         grailsPlugins()
         grailsHome()
         grailsCentral()
+        grailsRepo "http://grails.org/plugins"
 
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
@@ -27,5 +28,8 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.13'
+    }
+    plugins {
+        test ":spock:0.5-groovy-1.7"
     }
 }
