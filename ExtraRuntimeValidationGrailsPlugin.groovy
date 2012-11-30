@@ -1,3 +1,13 @@
+import org.codehaus.groovy.grails.commons.ApplicationHolder
+import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.codehaus.groovy.grails.commons.GrailsDomainClass
+import org.codehaus.groovy.grails.plugins.DomainClassPluginSupport
+import org.codehaus.groovy.grails.validation.ConstrainedPropertyBuilder
+import org.springframework.beans.BeanUtils
+import org.springframework.context.ApplicationContext
+import org.springframework.validation.BeanPropertyBindingResult
+import org.springframework.validation.Errors
+
 class ExtraRuntimeValidationGrailsPlugin {
     // the plugin version
     def version = "0.1"
@@ -21,30 +31,27 @@ Brief description of the plugin.
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/extra-runtime-validation"
 
-    def doWithWebDescriptor = { xml ->
-        // TODO Implement additions to web.xml (optional), this event occurs before 
-    }
-
-    def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
-    }
-
     def doWithDynamicMethods = { ctx ->
-        // TODO Implement registering dynamic methods to classes (optional)
+        application.domainClasses.each { domainClass ->
+            addValidationWithExtraConstraints(domainClass, ctx)
+        }
     }
 
-    def doWithApplicationContext = { applicationContext ->
-        // TODO Implement post initialization spring config (optional)
+    private addValidationWithExtraConstraints(domainClass, ctx) {
+        domainClass.metaClass.validate = { Closure extraConstraints ->
+            def extraConstrainedProps = buildExtraConstrainedProperties(domainClass, extraConstraints)
+            def intrinsicConstraints = delegate.constraints
+            delegate.metaClass.getConstraints = { -> extraConstrainedProps }
+            def valid = DomainClassPluginSupport.validateInstance(delegate, ctx)
+            delegate.metaClass.getConstraints = { -> intrinsicConstraints }
+            valid
+        }
     }
 
-    def onChange = { event ->
-        // TODO Implement code that is executed when any artefact that this plugin is
-        // watching is modified and reloaded. The event contains: event.source,
-        // event.application, event.manager, event.ctx, and event.plugin.
-    }
-
-    def onConfigChange = { event ->
-        // TODO Implement code that is executed when the project configuration changes.
-        // The event is the same as for 'onChange'.
+    private buildExtraConstrainedProperties(domainClass, extraConstraints) {
+        def constrainedPropertyBuilder = new ConstrainedPropertyBuilder(domainClass.clazz)
+        extraConstraints.delegate = constrainedPropertyBuilder
+        extraConstraints()
+        constrainedPropertyBuilder.constrainedProperties
     }
 }
