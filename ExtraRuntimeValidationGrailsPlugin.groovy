@@ -1,35 +1,25 @@
-import org.codehaus.groovy.grails.commons.ApplicationHolder
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.plugins.DomainClassPluginSupport
 import org.codehaus.groovy.grails.validation.ConstrainedPropertyBuilder
-import org.springframework.beans.BeanUtils
-import org.springframework.context.ApplicationContext
-import org.springframework.validation.BeanPropertyBindingResult
-import org.springframework.validation.Errors
 
 class ExtraRuntimeValidationGrailsPlugin {
-    // the plugin version
-    def version = "0.1"
-    // the version or versions of Grails the plugin is designed for
+    def version = "0.0.1"
     def grailsVersion = "1.3.7 > *"
-    // the other plugins this plugin depends on
     def dependsOn = [:]
-    // resources that are excluded from plugin packaging
+    def title = "Extra runtime validation for domain objects"
+    def organization = [name: "OSOCO", url: "http://osoco.es/"]
+    def developers = [
+        [name: "Marcin Gryszko", email: "marcin.gryszko@osoco.es"],
+        [name: "David Molinero", email: "david.molinero@osoco.es"]]
+
     def pluginExcludes = [
-            "grails-app/views/error.gsp"
+        "grails-app/domain/**/*"
     ]
+    def description = 'Adds validate(Closure extraConstraints) method to domain objects to perform additional validations at runtime.'
 
-    // TODO Fill in these fields
-    def author = "Your name"
-    def authorEmail = ""
-    def title = "Plugin summary/headline"
-    def description = '''\\
-Brief description of the plugin.
-'''
-
-    // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/extra-runtime-validation"
+    def license = "APACHE"
+    def documentation = "https://github.com/osoco/grails-extra-runtime-validation"
+    def scm = [url: "https://github.com/osoco/grails-extra-runtime-validation"]
+    def issueManagement = [system: "GitHub", url: "https://github.com/osoco/grails-extra-runtime-validation/issues"]
 
     def doWithDynamicMethods = { ctx ->
         application.domainClasses.each { domainClass ->
@@ -41,9 +31,9 @@ Brief description of the plugin.
         domainClass.metaClass.validate = { Closure extraConstraints ->
             def extraConstrainedProps = buildExtraConstrainedProperties(domainClass, extraConstraints)
             def intrinsicConstraints = delegate.constraints
-            delegate.metaClass.getConstraints = { -> extraConstrainedProps }
+            delegate.metaClass.getConstraints = {-> extraConstrainedProps }
             def valid = DomainClassPluginSupport.validateInstance(delegate, ctx)
-            delegate.metaClass.getConstraints = { -> intrinsicConstraints }
+            delegate.metaClass.getConstraints = {-> intrinsicConstraints }
             valid
         }
     }
