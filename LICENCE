@@ -1,0 +1,5 @@
+--2012-12-03 12:16:48--  https://github.com/osoco/grails-spring-security-otp/blob/master/LICENSE.txt
+Translacja github.com (github.com)... 207.97.227.239
+Łączenie się z github.com (github.com)|207.97.227.239|:443... połączono.
+BŁĄD: Żaden certyfikat nie został przedstawiony przez `github.com'.
+BŁĄD: Certyfikat `github.com' nie ma znanego wystawcy.
