@@ -41,7 +41,7 @@ class ExtraConstraintsSpec extends IntegrationSpec {
 
         then:
         hasError validSample, onField: 'lastName', error: 'blank'
-        hasNoFieldError validSample, onField: 'firstName'
+        hasNoError validSample, onField: 'firstName'
 
         when:
         validSample.validate({ firstName nullable: false })
@@ -62,7 +62,7 @@ class ExtraConstraintsSpec extends IntegrationSpec {
 
         then:
         hasError validSample, onField: 'lastName', error: 'blank'
-        hasNoFieldError validSample, onField: 'firstName'
+        hasNoError validSample, onField: 'firstName'
     }
 
     def "after validation of extra constraints, class intrinsic constraints are not modified"() {
@@ -84,7 +84,7 @@ class ExtraConstraintsSpec extends IntegrationSpec {
         assert args.error in obj.errors.allErrors.find { it.field == args.onField }.codes
     }
 
-    private void hasNoFieldError(args, obj) {
+    private void hasNoError(args, obj) {
         assert !(args.onField in obj.errors.allErrors*.field)
     }
 
