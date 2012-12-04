@@ -1,5 +1,4 @@
-import org.codehaus.groovy.grails.plugins.DomainClassPluginSupport
-import org.codehaus.groovy.grails.validation.ConstrainedPropertyBuilder
+import es.osoco.grails.plugins.extraval.ValidationUtils
 
 class ExtraRuntimeValidationGrailsPlugin {
     def version = "0.0.1"
@@ -12,7 +11,8 @@ class ExtraRuntimeValidationGrailsPlugin {
         [name: "David Molinero", email: "david.molinero@osoco.es"]]
 
     def pluginExcludes = [
-        "grails-app/domain/**/*"
+        "grails-app/domain/**/*",
+        "src/groovy/es/osoco/grails/plugins/extraval/test/**/*"
     ]
     def description = 'Adds validate(Closure extraConstraints) method to domain objects to perform additional validations at runtime.'
 
@@ -23,25 +23,7 @@ class ExtraRuntimeValidationGrailsPlugin {
 
     def doWithDynamicMethods = { ctx ->
         application.domainClasses.each { domainClass ->
-            addValidationWithExtraConstraints(domainClass, ctx)
+            ValidationUtils.addValidateWithExtraConstraints(domainClass, ctx)
         }
-    }
-
-    private addValidationWithExtraConstraints(domainClass, ctx) {
-        domainClass.metaClass.validate = { Closure extraConstraints ->
-            def extraConstrainedProps = buildExtraConstrainedProperties(domainClass, extraConstraints)
-            def intrinsicConstraints = delegate.constraints
-            delegate.metaClass.getConstraints = {-> extraConstrainedProps }
-            def valid = DomainClassPluginSupport.validateInstance(delegate, ctx)
-            delegate.metaClass.getConstraints = {-> intrinsicConstraints }
-            valid
-        }
-    }
-
-    private buildExtraConstrainedProperties(domainClass, extraConstraints) {
-        def constrainedPropertyBuilder = new ConstrainedPropertyBuilder(domainClass.clazz)
-        extraConstraints.delegate = constrainedPropertyBuilder
-        extraConstraints()
-        constrainedPropertyBuilder.constrainedProperties
     }
 }

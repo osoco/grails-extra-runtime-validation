@@ -1,6 +1,9 @@
 package es.osoco.grails.plugins.extraval
+
+import es.osoco.grails.plugins.extraval.test.ValidationAssertions
 import grails.plugin.spock.IntegrationSpec
 
+@Mixin(ValidationAssertions)
 class ExtraConstraintsSpec extends IntegrationSpec {
     private validSample
 
@@ -77,15 +80,6 @@ class ExtraConstraintsSpec extends IntegrationSpec {
         then:
         hasSingleNullableTrueConstraint Author.constraints.firstName
         hasSingleNullableTrueConstraint validSample.constraints.firstName
-    }
-
-    private void hasError(args, obj) {
-        assert args.onField in obj.errors.allErrors*.field
-        assert args.error in obj.errors.allErrors.find { it.field == args.onField }.codes
-    }
-
-    private void hasNoError(args, obj) {
-        assert !(args.onField in obj.errors.allErrors*.field)
     }
 
     private void hasSingleNullableTrueConstraint(constrainedProperty) {
