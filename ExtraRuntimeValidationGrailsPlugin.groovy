@@ -6,6 +6,8 @@ class ExtraRuntimeValidationGrailsPlugin {
     def dependsOn = [:]
     def title = "Extra runtime validation for domain objects"
     def organization = [name: "OSOCO", url: "http://osoco.es/"]
+    def author = "OSOCO"
+    def authorEmail = "info@osoco.es"
     def developers = [
         [name: "Marcin Gryszko", email: "marcin.gryszko@osoco.es"],
         [name: "David Molinero", email: "david.molinero@osoco.es"]]
