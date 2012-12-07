@@ -5,3 +5,7 @@
 *.iml
 out
 target
+*.log
+*.zip
+plugin.xml
+web-app
