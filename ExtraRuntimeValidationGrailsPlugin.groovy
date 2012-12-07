@@ -1,7 +1,7 @@
 import es.osoco.grails.plugins.extraval.ValidationUtils
 
 class ExtraRuntimeValidationGrailsPlugin {
-    def version = "0.0.3"
+    def version = "0.1"
     def grailsVersion = "1.3.7 > *"
     def dependsOn = [:]
     def title = "Extra runtime validation for domain objects"

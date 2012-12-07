@@ -54,7 +54,7 @@ class ExtraConstraintsSpec extends IntegrationSpec {
         hasError validSample, onField: 'firstName', error: 'nullable'
     }
 
-    def "extra constraints don't replace intrinsic constraints"() {
+    def "validation of extra constraints must be called after the standard validation"() {
         given:
         validSample.firstName = null
         validSample.lastName = ' \r\n\t '
